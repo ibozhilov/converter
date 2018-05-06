@@ -56,3 +56,37 @@ defimpl Msgpack.Paker, for: BitString do
     <<0xDB, byte_size(str)::32, str::binary>>
   end
 end
+
+defimpl Msgpack.Paker, for: List do
+  def pack(array) when length(array) < 15 do
+    header = <<9::4, length(array)::4>>
+    process_array(array, header)
+  end
+
+  ##TO DO implement the pack method for 16 and 32 sized arrays
+
+  defp process_array([], acc) do
+    acc
+  end
+
+  defp process_array([h|t], acc) do
+    process_array(t, <<acc::binary, Msgpack.Paker.pack(h)::binary>>)
+  end
+end
+
+defimpl Msgpack.Paker, for: Map do
+  def pack(m) when map_size(m) < 16 do
+    header = <<8::4, map_size(m)::4>>
+    m_as_list = Map.to_list(m)
+    process_map(m_as_list, header)
+  end
+
+  defp process_map([], acc) do
+    acc
+  end
+
+  defp process_map([h|t], acc) do
+    {k,v} = h
+    process_map(t, <<acc::binary, Msgpack.Paker.pack(k)::binary, Msgpack.Paker.pack(v)::binary>>)
+  end
+end
