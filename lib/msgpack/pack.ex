@@ -38,3 +38,21 @@ defimpl Msgpack.Paker, for: Integer do
     <<header, int::signed-integer>>
   end
 end
+
+defimpl Msgpack.Paker, for: BitString do
+  def pack(str) when byte_size(str) < 32 do
+    <<0b101::3, byte_size(str)::5, str::binary>>
+  end
+
+  def pack(str) when byte_size(str) < 256 do
+    <<0xD9, byte_size(str)::8, str::binary>>
+  end
+
+  def pack(str) when byte_size(str) < 65536 do
+    <<0xDA, byte_size(str)::16, str::binary>>
+  end
+
+  def pack(str) when byte_size(str) < 4_294_967_296 do
+    <<0xDB, byte_size(str)::32, str::binary>>
+  end
+end
