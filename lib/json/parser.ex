@@ -3,19 +3,19 @@ defmodule JSON.Parser do
 		nil
 	end
 
-	def parse("true") do
+	def parse(<<"true"::utf8>>) do
 		true
 	end
 
-	def parse("false") do
+	def parse(<<"false"::utf8>>) do
 		false
 	end
 
-	def parse("{" <> _ = object) do
+	def parse(<<"{"::utf8, _::binary>> = object) do
 		JSON.Parser.Object.parse(object)
 	end
 
-	def parse("[" <> _ = array) do
+	def parse(<<"["::utf8, _::binary>> = array) do
 		JSON.Parser.Array.parse(array)
 	end
 
@@ -23,7 +23,7 @@ defmodule JSON.Parser do
 		JSON.Parser.Number.parse(number)
 	end
 
-	def parse("-" <> _ = number) do
+	def parse(<<"-"::utf8, _::binary>> = number) do
 		JSON.Parser.Number.parse(number)
 	end
 
