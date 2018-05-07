@@ -25,8 +25,8 @@ defmodule JSON.Parser.Number do
 		parse_float(["." | acc], rest)
 	end
 
-	defp parse_number(acc, <<exp::utf8, rest::binary>>) when exp in ["e", "E"] do
-		parse_exponent([".", "0", "e" | acc], rest)
+	defp parse_number(acc, <<exp::utf8, rest::binary>>) when exp in [101, 69] do
+		parse_exponent(["e", "0", "." | acc], rest)
 	end
 
 
@@ -43,7 +43,7 @@ defmodule JSON.Parser.Number do
 		parse_float([digit| acc], rest)
 	end
 
-	defp parse_float(acc, <<exp::utf8, rest::binary>>) when exp in ["e", "E"] do
+	defp parse_float(acc, <<exp::utf8, rest::binary>>) when exp in [101, 69] do
 		parse_exponent(["e" | acc], rest)
 	end
 
