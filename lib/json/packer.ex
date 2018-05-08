@@ -57,19 +57,21 @@ defimpl JSON.Packer, for: List do
 end
 
 defimpl JSON.Packer, for: Map do
-  def pack(map) when map == %{}do
+  def pack(map) when map == %{} do
     "{}"
   end
 
   def pack(map) do
     map_as_list = Map.to_list(map)
+
     case pack_map(map_as_list) do
       {:ok, json} -> "{" <> json <> "}"
       {:error, reason} -> {:error, reason}
     end
-   #  with {:ok, json} <- pack_map(map_as_list) do
-   #   "{" <> json <> "}"
-   # end
+
+    #  with {:ok, json} <- pack_map(map_as_list) do
+    #   "{" <> json <> "}"
+    # end
   end
 
   defp pack_map([h | []]) do
@@ -78,8 +80,8 @@ defimpl JSON.Packer, for: Map do
 
   defp pack_map([h | t]) do
     with {:ok, json_head} <- pack_member(h),
-      {:ok, json_tail} <- pack_map(t),
-      do: {:ok, json_head <> ", " <> json_tail}
+         {:ok, json_tail} <- pack_map(t),
+         do: {:ok, json_head <> ", " <> json_tail}
   end
 
   defp pack_member({k, v})

@@ -27,9 +27,10 @@ defmodule JsonPackerTest do
   end
 
   test "pack map with non string key" do
-  	assert JSON.Packer.pack(%{1=>2}) == {:error, "Only string names are allowed in JSON Object. Got 1"}
+    assert JSON.Packer.pack(%{1 => 2}) ==
+             {:error, "Only string names are allowed in JSON Object. Got 1"}
   end
-  
+
   test "pack map" do
     m = %{
       "atom" => :atom,
@@ -38,6 +39,8 @@ defmodule JsonPackerTest do
       "map" => %{"array" => [1, 2, %{}]},
       "empty_array" => []
     }
-    assert JSON.Packer.pack(m) == "{\"atom\": \"atom\", \"bool\": true, \"empty_array\": [], \"map\": {\"array\": [1, 2, {}]}, \"nil\": null}"
+
+    assert JSON.Packer.pack(m) ==
+             "{\"atom\": \"atom\", \"bool\": true, \"empty_array\": [], \"map\": {\"array\": [1, 2, {}]}, \"nil\": null}"
   end
 end
