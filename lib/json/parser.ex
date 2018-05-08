@@ -46,4 +46,8 @@ defmodule JSON.Parser do
   defp parse_json(<<quatation::utf8, _::binary>> = string) when quatation == 34 do
     JSON.Parser.String.parse(string)
   end
+
+  defp parse_json(binary) do
+    {:error, "Do not know how to process " <> binary}
+  end
 end
