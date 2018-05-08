@@ -37,11 +37,11 @@ defmodule JSON.Parser.Array do
     |> process_array([item | acc])
   end
 
-  defp process_array({:error, reason}, acc) do
+  defp process_array({:error, reason}, _) do
     {:error, reason}
   end
 
-  defp process_array({item, binary}, acc) do
-    {:error, "Unexpected end of buffer"}
+  defp process_array({_, rest}, _) do
+    {:error, "Expected ] got " <> rest}
   end
 end

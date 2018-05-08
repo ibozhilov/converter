@@ -11,7 +11,7 @@ defmodule JSON.Parser.Object do
     |> process_object_name_field(%{})
   end
 
-  def parse(binary) do
+  def parse(_) do
     {:error, "Unexpected data"}
   end
 
@@ -31,7 +31,7 @@ defmodule JSON.Parser.Object do
     {:error, reason}
   end
 
-  defp process_object_name_field({:error, reason}, acc) do
+  defp process_object_name_field({:error, reason}, _) do
     {:error, reason}
   end
 
@@ -43,11 +43,11 @@ defmodule JSON.Parser.Object do
     |> proccess_object_value_field(name, acc)
   end
 
-  defp process_object_name_field({name, binary}, acc) do
+  defp process_object_name_field({_, binary}, _) do
     {:error, "Expected : got " <> binary}
   end
 
-  defp proccess_object_value_field({:error, reason}, name, acc) do
+  defp proccess_object_value_field({:error, reason}, _, _) do
     {:error, reason}
   end
 
@@ -66,7 +66,7 @@ defmodule JSON.Parser.Object do
     |> process_object_name_field(acc)
   end
 
-  defp proccess_object_value_field({value, rest}, name, acc) do
+  defp proccess_object_value_field({_, rest}, _, _) do
     {:error, "Expected } got " <> rest}
   end
 end

@@ -22,7 +22,7 @@ defmodule JsonParserArrayTest do
   end
 
   test "parse unfinished array 2" do
-    assert JSON.Parser.Array.parse("[1,2") == {:error, "Unexpected end of buffer"}
+    assert Kernel.match?({:error, "Expected ] got " <> _}, JSON.Parser.Array.parse("[1,2"))
   end
 
   test "parse array" do

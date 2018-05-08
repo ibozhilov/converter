@@ -3,11 +3,11 @@ defmodule JSON.Parser.String do
     parse_string([], rest)
   end
 
-  def parse(data) do
+  def parse(_) do
     {:error, "Unexpected data"}
   end
 
-  defp parse_string(acc, <<>>) do
+  defp parse_string(_, <<>>) do
     {:error, "Unexpected end of buffer."}
   end
 
@@ -20,7 +20,7 @@ defmodule JSON.Parser.String do
     parse_string([char | acc], rest)
   end
 
-  defp parse_string(acc, json) do
+  defp parse_string(_, _) do
     {:error, "Could not decode char in string."}
   end
 end

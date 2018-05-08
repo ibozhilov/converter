@@ -13,7 +13,7 @@ defmodule JSON.Parser.Number do
     end
   end
 
-  def parse(binary) do
+  def parse(_) do
     {:error, "Unexpected data"}
   end
 
@@ -70,7 +70,7 @@ defmodule JSON.Parser.Number do
   end
 
   # If there is no number after the exponent sign throw error
-  defp parse_exponent(acc, binary) do
+  defp parse_exponent(_, _) do
     {:error, "Could not parse exponent"}
   end
 
