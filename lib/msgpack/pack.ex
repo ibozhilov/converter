@@ -27,14 +27,23 @@ defimpl Msgpack.Paker, for: Float do
 end
 
 defimpl Msgpack.Paker, for: Integer do
-  def pack(0) do 
-    <<0xd0, 0::signed-integer>>
+  def pack(0) do
+    <<0xD0, 0::signed-integer>>
   end
-  
+
   def pack(int) do
-    header = int |> :math.log2() |> :math.ceil() 
-    |> Kernel.+(1) |> Kernel./(8) |> :math.ceil() 
-    |> :math.log2() |> :math.ceil() |> Kernel.trunc() |> Kernel.+(0xd0)
+    header =
+      int
+      |> :math.log2()
+      |> :math.ceil()
+      |> Kernel.+(1)
+      |> Kernel./(8)
+      |> :math.ceil()
+      |> :math.log2()
+      |> :math.ceil()
+      |> Kernel.trunc()
+      |> Kernel.+(0xD0)
+
     <<header, int::signed-integer>>
   end
 end
@@ -63,13 +72,13 @@ defimpl Msgpack.Paker, for: List do
     process_array(array, header)
   end
 
-  ##TO DO implement the pack method for 16 and 32 sized arrays
+  ## TO DO implement the pack method for 16 and 32 sized arrays
 
   defp process_array([], acc) do
     acc
   end
 
-  defp process_array([h|t], acc) do
+  defp process_array([h | t], acc) do
     process_array(t, <<acc::binary, Msgpack.Paker.pack(h)::binary>>)
   end
 end
@@ -85,8 +94,8 @@ defimpl Msgpack.Paker, for: Map do
     acc
   end
 
-  defp process_map([h|t], acc) do
-    {k,v} = h
+  defp process_map([h | t], acc) do
+    {k, v} = h
     process_map(t, <<acc::binary, Msgpack.Paker.pack(k)::binary, Msgpack.Paker.pack(v)::binary>>)
   end
 end
