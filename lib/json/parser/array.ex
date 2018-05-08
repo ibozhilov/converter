@@ -1,8 +1,8 @@
 defmodule JSON.Parser.Array do
   def parse(<<"["::utf8, rest::binary>>) do
-    rest 
-    |> String.trim() 
-    |> JSON.Parser.parse() 
+    rest
+    |> String.trim()
+    |> JSON.Parser.parse()
     |> format()
     |> process_array([])
   end
@@ -19,7 +19,7 @@ defmodule JSON.Parser.Array do
     {result, String.trim(rest)}
   end
 
-  defp format({:error, reason}) do 
+  defp format({:error, reason}) do
     {:error, reason}
   end
 
@@ -30,18 +30,18 @@ defmodule JSON.Parser.Array do
   end
 
   defp process_array({item, <<","::utf8, rest::binary>>}, acc) do
-    rest 
-    |> String.trim() 
-    |> JSON.Parser.parse() 
+    rest
+    |> String.trim()
+    |> JSON.Parser.parse()
     |> format()
     |> process_array([item | acc])
   end
 
-  defp process_array({item, binary}, acc) do
-    {:error, "Unexpected end of buffer"}
-  end
-
   defp process_array({:error, reason}, acc) do
     {:error, reason}
+  end
+
+  defp process_array({item, binary}, acc) do
+    {:error, "Unexpected end of buffer"}
   end
 end
