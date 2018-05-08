@@ -1,4 +1,8 @@
 defmodule JSON.Parser do
+  def parse(<<>>) do
+    {:error, "No data provided"}
+  end
+
   def parse(<<json::binary>>) do
     case parse_json(json) do
       {:ok, result, <<>>} -> result
