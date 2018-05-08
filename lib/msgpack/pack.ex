@@ -67,12 +67,20 @@ defimpl Msgpack.Paker, for: BitString do
 end
 
 defimpl Msgpack.Paker, for: List do
-  def pack(array) when length(array) < 15 do
+  def pack(array) when length(array) < 16 do
     header = <<9::4, length(array)::4>>
     process_array(array, header)
   end
 
-  ## TO DO implement the pack method for 16 and 32 sized arrays
+  def pack(array) when length(array) < 65536 do
+    header = <<0xDC, length(array)::16>>
+    process_array(array, header)
+  end
+
+  def pack(array) when length(array) < 4_294_967_296 do
+    header = <<0xDD, length(array)::32>>
+    process_array(array, header)
+  end
 
   defp process_array([], acc) do
     acc
@@ -86,6 +94,18 @@ end
 defimpl Msgpack.Paker, for: Map do
   def pack(m) when map_size(m) < 16 do
     header = <<8::4, map_size(m)::4>>
+    m_as_list = Map.to_list(m)
+    process_map(m_as_list, header)
+  end
+
+  def pack(m) when map_size(m) < 65536 do
+    header = <<0xDE, map_size(m)::16>>
+    m_as_list = Map.to_list(m)
+    process_map(m_as_list, header)
+  end
+
+  def pack(m) when map_size(m) < 4_294_967_296 do
+    header = <<0xDF, map_size(m)::32>>
     m_as_list = Map.to_list(m)
     process_map(m_as_list, header)
   end
